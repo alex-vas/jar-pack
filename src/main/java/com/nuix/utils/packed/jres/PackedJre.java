@@ -1,5 +1,7 @@
 package com.nuix.utils.packed.jres;
 
+import java.util.List;
+
 public interface PackedJre
 {
 
@@ -9,6 +11,8 @@ public interface PackedJre
 
     String getVersion();
 
-    String getPath();
+    String getJarPath();
+
+    List<PackedJreEntry> getEntries();
 
 }
