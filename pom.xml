@@ -1,0 +1,230 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>private</groupId>
+    
+    <!-- Artifact Id must be in a form of "jre.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
+    <!-- The vendor is on of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
+    <artifactId>jre.oracle.macOS</artifactId>
+    
+    <!-- JRE version, e.g.,1.8.0_102, ... -->
+    <version>1.8.0_102</version>
+
+    <name>The entire JRE packed into the JAR.</name>
+    <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
+
+    <organization>
+        <name>Nuix Pty Ltd</name>
+        <url>http://nuix.com</url>
+    </organization>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Generate class name -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                
+                    <!-- Perform series of regular expressions to set up some properties -->
+                    <execution>
+                        <id>regex-vendor-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.jre.vendor</name>
+                            <value>${project.artifactId}</value>
+                            <regex>^([^.]+)\.([^.]+)\.([^.]+)$</regex>
+                            <replacement>$2</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>regex-platform-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.jre.platform</name>
+                            <value>${project.artifactId}</value>
+                            <regex>^([^.]+)\.([^.]+)\.([^.]+)$</regex>
+                            <replacement>$3</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>regex-classname-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.class.name</name>
+                            <value>PackedJreImplementation_${packed.jre.vendor}_${packed.jre.platform}_${project.version}</value>
+                            <regex>\W</regex>
+                            <replacement>_</replacement>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>regex-path-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.path</name>
+                            <value>jre/${packed.jre.vendor}.${packed.jre.platform}-${project.version}</value>
+                            <regex>.*</regex>
+                            <replacement>$0</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    
+                    <!-- Include generated source with compile -->
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/replacer</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Generate the source code -->
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <file>${basedir}/src/main/java/com/nuix/utils/packed/jres/impl/PackedJreImplementation.java</file>
+                    <outputFile>${basedir}/target/generated-sources/replacer/com/nuix/utils/packed/jres/impl/${packed.class.name}.java</outputFile>
+                    <replacements>
+                        <replacement>
+                            <token>PackedJreImplementation</token>
+                            <value>\${packed.class.name}</value>
+                        </replacement>
+                        <replacement>
+                            <token>"vendor"</token>
+                            <value>"\${packed.jre.vendor}"</value>
+                        </replacement>
+                        <replacement>
+                            <token>"platform"</token>
+                            <value>"\${packed.jre.platform}"</value>
+                        </replacement>
+                        <replacement>
+                            <token>"version"</token>
+                            <value>"\${project.version}"</value>
+                        </replacement>
+                        <replacement>
+                            <token>"path"</token>
+                            <value>"\${packed.path}"</value>
+                        </replacement>
+                    </replacements>
+                </configuration>
+            </plugin>
+            <!-- Specify Java Source code level -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- Copy resources which are located next to java files in addition to those which are in /resources -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes/${packed.path}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>jre</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        
+        <!-- Eclipse auto-generated code -->
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>build-helper-maven-plugin</artifactId>
+                                        <versionRange>[1.12,)</versionRange>
+                                        <goals>
+                                            <goal>regex-property</goal>
+                                            <goal>add-source</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                                        <artifactId>replacer</artifactId>
+                                        <versionRange>[1.5.3,)</versionRange>
+                                        <goals>
+                                            <goal>replace</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
