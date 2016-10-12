@@ -11,18 +11,12 @@ public class PackedJres
 
     public static List<PackedJre> getAll()
     {
-        List<PackedJre> res = new ArrayList<>();
-        SERVICE_LOADER.forEach(res::add);
-        return res;
-    }
-
-    public static void main(String[] args)
-    {
-        getAll().forEach(jre ->
+        List<PackedJre> res = new ArrayList<PackedJre>();
+        for (PackedJre jre : SERVICE_LOADER)
         {
-            System.out.println(jre.getVersion() +" - "+ jre.getVendor());
-        });
-        System.out.println("Done.");
+            res.add(jre);
+        }
+        return res;
     }
 
 }

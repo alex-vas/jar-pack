@@ -1,1 +1,1 @@
-${packed.class.name}
+com.nuix.utils.packed.jres.impl.${packed.class.name}
