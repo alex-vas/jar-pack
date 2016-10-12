@@ -1,5 +1,4 @@
 **/.DS_Store
-jre/*
 target/
 pom.xml.tag
 pom.xml.releaseBackup
