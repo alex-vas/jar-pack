@@ -1,6 +1,5 @@
-package com.nuix.utils.packed.jres.impl;
+package com.nuix.utils.jarpack.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,42 +11,48 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.nuix.utils.packed.jres.PackedJre;
-import com.nuix.utils.packed.jres.PackedJreEntry;
+import com.nuix.utils.jarpack.JarPack;
+import com.nuix.utils.jarpack.JarPackEntry;
 
-public class PackedJreImplementation implements PackedJre
+public class JarPackImplementationTemplate implements JarPack
 {
+
+    @Override
+    public String getProduct()
+    {
+        return "product"; // will be substituted by maven's regexp plugin
+    }
 
     @Override
     public String getVendor()
     {
-        return "vendor";
+        return "vendor"; // will be substituted by maven's regexp plugin
     }
 
     @Override
     public String getPlatform()
     {
-        return "platform";
+        return "platform"; // will be substituted by maven's regexp plugin
     }
 
     @Override
     public String getVersion()
     {
-        return "version";
+        return "version"; // will be substituted by maven's regexp plugin
     }
 
     @Override
-    public String getJarPath()
+    public String getPath()
     {
-        return "path";
+        return "path"; // will be substituted by maven's regexp plugin
     }
 
     @Override
-    public List<PackedJreEntry> getEntries()
+    public List<JarPackEntry> getEntries()
     {
-        final List<PackedJreEntry> res = new ArrayList<PackedJreEntry>();
+        final List<JarPackEntry> res = new ArrayList<JarPackEntry>();
 
-        InputStream is = PackedJreImplementation.class.getResourceAsStream("/META-INF/jre-file-list.xml");
+        InputStream is = JarPackImplementationTemplate.class.getResourceAsStream("/META-INF/file-list.xml");
         try
         {
             SAXParserFactory.newInstance().newSAXParser().parse(is, new DefaultHandler()
@@ -83,7 +88,7 @@ public class PackedJreImplementation implements PackedJre
 
                     if (qName.equals("file"))
                     {
-                        res.add(new PackedJreEntry()
+                        res.add(new JarPackEntry()
                         {
                             final String finalFileName = fileName;
                             final String finalMd5 = md5;
@@ -95,11 +100,6 @@ public class PackedJreImplementation implements PackedJre
                                 return finalFileName;
                             }
                             @Override
-                            public String getJarPath()
-                            {
-                                return new File(getJarPath(), finalFileName).toString();
-                            }
-                            @Override
                             public String getMD5()
                             {
                                 return finalMd5;
@@ -108,6 +108,11 @@ public class PackedJreImplementation implements PackedJre
                             public String getSHA1()
                             {
                                 return finalSha1;
+                            }
+                            @Override
+                            public InputStream getContent()
+                            {
+                                return JarPackImplementationTemplate.class.getResourceAsStream("/"+ getPath() +"/"+ getName());
                             }
                             @Override
                             public String toString()

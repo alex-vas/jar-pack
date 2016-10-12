@@ -4,8 +4,8 @@
 
     <groupId>private</groupId>
     
-    <!-- Artifact Id must be in a form of "jre.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
-    <!-- The vendor is on of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
+    <!-- Artifact Id must be in a form of "${product}.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
+    <!-- The product is "jre", the vendor is one of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
     <artifactId>jre.oracle.macOS</artifactId>
     
     <!-- JRE version, e.g.,1.8.0_102, ... -->
@@ -33,12 +33,25 @@
                 
                     <!-- Perform series of regular expressions to set up some properties -->
                     <execution>
+                        <id>regex-product-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.product</name>
+                            <value>${project.artifactId}</value>
+                            <regex>^([^.]+)\.([^.]+)\.([^.]+)$</regex>
+                            <replacement>$1</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>regex-vendor-property</id>
                         <goals>
                             <goal>regex-property</goal>
                         </goals>
                         <configuration>
-                            <name>packed.jre.vendor</name>
+                            <name>packed.vendor</name>
                             <value>${project.artifactId}</value>
                             <regex>^([^.]+)\.([^.]+)\.([^.]+)$</regex>
                             <replacement>$2</replacement>
@@ -51,7 +64,7 @@
                             <goal>regex-property</goal>
                         </goals>
                         <configuration>
-                            <name>packed.jre.platform</name>
+                            <name>packed.platform</name>
                             <value>${project.artifactId}</value>
                             <regex>^([^.]+)\.([^.]+)\.([^.]+)$</regex>
                             <replacement>$3</replacement>
@@ -65,22 +78,9 @@
                         </goals>
                         <configuration>
                             <name>packed.class.name</name>
-                            <value>PackedJreImplementation_${packed.jre.vendor}_${packed.jre.platform}_${project.version}</value>
+                            <value>JarPack_${packed.product}_${packed.vendor}_${packed.platform}_${project.version}</value>
                             <regex>\W</regex>
                             <replacement>_</replacement>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>regex-path-property</id>
-                        <goals>
-                            <goal>regex-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>packed.path</name>
-                            <value>jre/${packed.jre.vendor}.${packed.jre.platform}-${project.version}</value>
-                            <regex>.*</regex>
-                            <replacement>$0</replacement>
-                            <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
                     
@@ -113,20 +113,24 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>${basedir}/src/main/java/com/nuix/utils/packed/jres/impl/PackedJreImplementation.java</file>
-                    <outputFile>${basedir}/target/generated-sources/replacer/com/nuix/utils/packed/jres/impl/${packed.class.name}.java</outputFile>
+                    <file>${basedir}/src/main/java/com/nuix/utils/jarpack/impl/JarPackImplementationTemplate.java</file>
+                    <outputFile>${basedir}/target/generated-sources/replacer/com/nuix/utils/jarpack/impl/${packed.class.name}.java</outputFile>
                     <replacements>
                         <replacement>
-                            <token>PackedJreImplementation</token>
+                            <token>JarPackImplementationTemplate</token>
                             <value>\${packed.class.name}</value>
                         </replacement>
                         <replacement>
+                            <token>"product"</token>
+                            <value>"\${packed.product}"</value>
+                        </replacement>
+                        <replacement>
                             <token>"vendor"</token>
-                            <value>"\${packed.jre.vendor}"</value>
+                            <value>"\${packed.vendor}"</value>
                         </replacement>
                         <replacement>
                             <token>"platform"</token>
-                            <value>"\${packed.jre.platform}"</value>
+                            <value>"\${packed.platform}"</value>
                         </replacement>
                         <replacement>
                             <token>"version"</token>
@@ -134,7 +138,7 @@
                         </replacement>
                         <replacement>
                             <token>"path"</token>
-                            <value>"\${packed.path}"</value>
+                            <value>"\${packed.product}"</value>
                         </replacement>
                     </replacements>
                 </configuration>
@@ -164,10 +168,10 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/classes/${packed.path}</outputDirectory>
+                            <outputDirectory>${basedir}/target/classes/${packed.product}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>jre</directory>
+                                    <directory>data</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -192,14 +196,14 @@
                 <configuration>
                     <fileSets>
                         <fileSet>
-                            <directory>${basedir}/jre</directory>
+                            <directory>data</directory>
                         </fileSet>
                     </fileSets>
                     <includeRelativePath>true</includeRelativePath>
                     <individualFiles>false</individualFiles>
                     <csvSummary>false</csvSummary>
                     <xmlSummary>true</xmlSummary>
-                    <xmlSummaryFile>${basedir}/target/classes/META-INF/jre-file-list.xml</xmlSummaryFile>
+                    <xmlSummaryFile>${basedir}/target/classes/META-INF/file-list.xml</xmlSummaryFile>
                 </configuration>
             </plugin>
 
