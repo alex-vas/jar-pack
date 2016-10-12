@@ -18,5 +18,14 @@ In rear situations you would need to access JRE binary from within a Java applic
 
         ServiceLoader.load(PackedJre.class).forEach(jre ->
         {
-            System.out.println("JRE found: "+ jre.getVendor() +" - "+ jre.getPlatform() +""+ jre.getVersion() +" - "+ jre.getPath());
+            System.out.println("JRE found: "+ jre.getVendor() +" - "+ jre.getPlatform() +" - "+ jre.getVersion() +" - "+ jre.getPath());
+        });
+
+or try this to get individual file entries along with MD5s:
+
+        PackedJres.getAll().forEach(jre ->
+        {
+            jre.getEntries().forEach(file -> {
+                System.out.println(file.getName() +", MD5:"+ file.getMD5());
+            });
         });
