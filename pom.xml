@@ -15,8 +15,8 @@
     <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
 
     <organization>
-        <name>Nuix Pty Ltd</name>
-        <url>http://nuix.com</url>
+        <name>Individual</name>
+        <url>https://github.com/alex-vas/jre2jar</url>
     </organization>
 
     <properties>
@@ -25,7 +25,6 @@
 
     <build>
         <plugins>
-            <!-- Generate class name -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -99,6 +98,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <!-- Generate the source code -->
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
@@ -139,6 +139,7 @@
                     </replacements>
                 </configuration>
             </plugin>
+            
             <!-- Specify Java Source code level -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -149,6 +150,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            
             <!-- Copy resources which are located next to java files in addition to those which are in /resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
