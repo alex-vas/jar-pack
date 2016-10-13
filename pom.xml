@@ -72,6 +72,19 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>regex-path-property</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>packed.path</name>
+                            <value>${project.artifactId}-${project.version}</value>
+                            <regex>.*</regex>
+                            <replacement>$0</replacement>
+                            <failIfNoMatch>true</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>regex-classname-property</id>
                         <goals>
                             <goal>regex-property</goal>
@@ -138,7 +151,7 @@
                         </replacement>
                         <replacement>
                             <token>"path"</token>
-                            <value>"\${packed.product}"</value>
+                            <value>"\${packed.path}"</value>
                         </replacement>
                     </replacements>
                 </configuration>
@@ -168,7 +181,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/classes/${packed.product}</outputDirectory>
+                            <outputDirectory>${basedir}/target/classes/${packed.path}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>data</directory>
@@ -203,7 +216,7 @@
                     <individualFiles>false</individualFiles>
                     <csvSummary>false</csvSummary>
                     <xmlSummary>true</xmlSummary>
-                    <xmlSummaryFile>${basedir}/target/classes/META-INF/file-list.xml</xmlSummaryFile>
+                    <xmlSummaryFile>${basedir}/target/classes/META-INF/${packed.path}/file-list.xml</xmlSummaryFile>
                 </configuration>
             </plugin>
 

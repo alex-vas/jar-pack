@@ -52,7 +52,7 @@ public class JarPackImplementationTemplate implements JarPack
     {
         final List<JarPackEntry> res = new ArrayList<JarPackEntry>();
 
-        InputStream is = JarPackImplementationTemplate.class.getResourceAsStream("/META-INF/file-list.xml");
+        InputStream is = JarPackImplementationTemplate.class.getClassLoader().getResourceAsStream("META-INF/"+ getPath() +"/file-list.xml");
         try
         {
             SAXParserFactory.newInstance().newSAXParser().parse(is, new DefaultHandler()
@@ -112,7 +112,7 @@ public class JarPackImplementationTemplate implements JarPack
                             @Override
                             public InputStream getContent()
                             {
-                                return JarPackImplementationTemplate.class.getResourceAsStream("/"+ getPath() +"/"+ getName());
+                                return JarPackImplementationTemplate.class.getClassLoader().getResourceAsStream(getPath() +"/"+ getName());
                             }
                             @Override
                             public String toString()

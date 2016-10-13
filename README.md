@@ -6,7 +6,7 @@ This can be handy for those who check in the JRE into the source control system,
 
 # Creating a JAR
 
- 1. Copy your JRE to `/jre` directory. Note that it has a `/bin` sub directory with `java` or `java.exe` and `/lib` with `rt.jar` in it.
+ 1. Copy your JRE to `/data` directory. Note that it has a `/bin` sub directory with `java` or `java.exe` and `/lib` with `rt.jar` in it.
  2. Edit `<artifactId>` and `<version>` values in `pom.xml` file as appropriate. Make note of the comments as to the format.
  3. Run `mvn clean package`.
  4. Your `jar` and `pom` files would be in the `/target` directory.
@@ -29,3 +29,5 @@ or try this to get individual file entries along with MD5s:
                 System.out.println(file.getName() +", MD5:"+ file.getMD5());
             });
         });
+
+PS. This project could be used to pack any content - not just JREs.
