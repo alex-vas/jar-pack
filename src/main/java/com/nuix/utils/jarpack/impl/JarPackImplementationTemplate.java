@@ -69,7 +69,7 @@ public class JarPackImplementationTemplate implements JarPack
                 {
                     if (qName.equals("file"))
                     {
-                        fileName = attributes.getValue("name");
+                        fileName = attributes.getValue("name").replace('\\', '/');
                         md5 = null;
                         sha1 = null;
                     }
