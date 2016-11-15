@@ -1,3 +1,7 @@
+# JRE specific branch
+
+Consider getting your JRE from here: https://bintray.com/jetbrains/intellij-jdk
+
 # jre2jar
 
 Small Maven project which packs given JRE into a JAR with a POM.
