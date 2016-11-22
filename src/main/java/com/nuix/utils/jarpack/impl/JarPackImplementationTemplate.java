@@ -100,6 +100,11 @@ public class JarPackImplementationTemplate implements JarPack
                                 return finalFileName;
                             }
                             @Override
+                            public JarPack getPack()
+                            {
+                                return JarPackImplementationTemplate.this;
+                            }
+                            @Override
                             public String getMD5()
                             {
                                 return finalMd5;
