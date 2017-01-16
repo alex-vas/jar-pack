@@ -94,6 +94,7 @@
                             <value>JarPack_${packed.product}_${packed.vendor}_${packed.platform}_${project.version}</value>
                             <regex>\W</regex>
                             <replacement>_</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
                     
