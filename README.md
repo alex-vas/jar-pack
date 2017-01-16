@@ -1,10 +1,6 @@
-# JRE specific branch
+# jar-pack
 
-Consider getting your JRE from here: https://bintray.com/jetbrains/intellij-jdk
-
-# jre2jar
-
-Small Maven project which packs given JRE into a JAR with a POM.
+Is a small Maven project which packs given binary (e.g, JRE) into a JAR with a POM.
 Result can be added to a private Maven repository and referenced by your builds.
 This can be handy for those who check in the JRE into the source control system, and looking for the ways to reduce its size.
 
@@ -33,5 +29,3 @@ or try this to get individual file entries along with MD5s:
                 System.out.println(file.getName() +", MD5:"+ file.getMD5());
             });
         });
-
-PS. This project could be used to pack any content - not just JREs.
