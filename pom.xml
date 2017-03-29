@@ -9,7 +9,7 @@
     <artifactId>jre.intellij.macOS</artifactId>
     
     <!-- JRE version, e.g.,1.8.0_102, ... -->
-    <version>8u112b687</version>
+    <version>8u112b736.14</version>
 
     <name>The entire JRE packed into the JAR.</name>
     <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
