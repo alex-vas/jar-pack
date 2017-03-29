@@ -169,7 +169,7 @@
                 </configuration>
             </plugin>
             
-            <!-- Copy JRE directory into the jar  -->
+            <!-- Copy data/ directory into the jar  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -193,7 +193,7 @@
                 </executions>
             </plugin>
 
-            <!-- Generate list and MD5s for the jre/ files -->
+            <!-- Generate list and MD5s for the data/ files -->
             <plugin>
                 <groupId>net.ju-n.maven.plugins</groupId>
                 <artifactId>checksum-maven-plugin</artifactId>
