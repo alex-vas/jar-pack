@@ -169,7 +169,7 @@
                 </configuration>
             </plugin>
             
-            <!-- Copy JRE directory into the jar  -->
+            <!-- Copy data directory into the jar  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
