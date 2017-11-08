@@ -6,10 +6,10 @@
     
     <!-- Artifact Id must be in a form of "${product}.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
     <!-- The product is "jre", the vendor is one of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
-    <artifactId>jre.oracle.macOS</artifactId>
+    <artifactId>jre.intellij.linux64</artifactId>
     
     <!-- JRE version, e.g.,1.8.0_102, ... -->
-    <version>1.8.0_102</version>
+    <version>8u152b1056.8</version>
 
     <name>The entire JRE packed into the JAR.</name>
     <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
