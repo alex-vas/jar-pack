@@ -6,13 +6,16 @@
 
     <!-- Artifact Id must be in a form of "${product}.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
     <!-- The product is "jre", the vendor is one of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
-    <artifactId>jre.intellij.linux64</artifactId>
+    <artifactId>jre.intellij.macOS</artifactId>
 
     <!-- JRE version, e.g.,1.8.0_102, ... -->
-    <version>8u152b1056.8</version>
+    <version>8u152b1056.10</version>
 
     <name>The entire JRE packed into the JAR.</name>
     <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
+
+    <!--name>Nuix Native Launcher.</name>
+    <description>This is handy for inclusion with an HTTP  Server. Helps reducing the size of the source code repository.</description-->
 
     <organization>
         <name>Individual</name>
@@ -195,7 +198,7 @@
                 </executions>
             </plugin>
 
-            <!-- Set permissions for files (specifically chmod +x) // this is to compensate for the fact that resource copy routine above doesn't copy permissions, see the comment above -->
+            <!-- Set JRE permissions for files (specifically chmod +x) // this is to compensate for the fact that resource copy routine above doesn't copy permissions, see the comment above -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -211,8 +214,10 @@
                             <target>
                                 <!-- JRE files -->
                                 <chmod dir="${basedir}/target/classes" includes="**/bin/*" perm="+x"/>
-                                <chmod dir="${basedir}/target/classes" includes="**/lib/*.dylib*" perm="+x"/> <!-- macOS -->
-                                <chmod dir="${basedir}/target/classes" includes="**/lib/jspawnhelper" perm="+x"/> <!-- macOS and Linux -->
+                                <chmod dir="${basedir}/target/classes" includes="**/lib/jspawnhelper" perm="+x"/> <!-- macOS -->
+                                <chmod dir="${basedir}/target/classes" includes="**/lib/**/*.dylib*" perm="+x"/> <!-- macOS -->
+                                <chmod dir="${basedir}/target/classes" includes="**/lib/jexec" perm="+x"/> <!-- Linux -->
+                                <chmod dir="${basedir}/target/classes" includes="**/lib/**/*.so" perm="+x"/> <!-- Linux -->
                             </target>
                         </configuration>
                     </execution>
