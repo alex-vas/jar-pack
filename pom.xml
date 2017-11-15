@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>private</groupId>
-    
+
     <!-- Artifact Id must be in a form of "${product}.${vendor}.${platform}", those properties will be extracted from it later by regexp -->
     <!-- The product is "jre", the vendor is one of {oracle, openjdk}, and the platform is one of {masOS, win32, win64, linux32, linux64} -->
-    <artifactId>jre.intellij.macOS</artifactId>
-    
+    <artifactId>jre.intellij.linux64</artifactId>
+
     <!-- JRE version, e.g.,1.8.0_102, ... -->
-    <version>8u112b736.14</version>
+    <version>8u152b1056.8</version>
 
     <name>The entire JRE packed into the JAR.</name>
     <description>This is handy for building installers or deploy as required. Helps reducing the size of the source code repository.</description>
@@ -30,7 +30,7 @@
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.12</version>
                 <executions>
-                
+
                     <!-- Perform series of regular expressions to set up some properties -->
                     <execution>
                         <id>regex-product-property</id>
@@ -97,7 +97,7 @@
                             <failIfNoMatch>false</failIfNoMatch>
                         </configuration>
                     </execution>
-                    
+
                     <!-- Include generated source with compile -->
                     <execution>
                         <phase>generate-sources</phase>
@@ -112,7 +112,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Generate the source code -->
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
@@ -157,7 +157,7 @@
                     </replacements>
                 </configuration>
             </plugin>
-            
+
             <!-- Specify Java Source code level -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -168,7 +168,7 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            
+
             <!-- Copy data/ directory into the jar  -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -182,7 +182,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <!-- XXX Check the progress of https://issues.apache.org/jira/browse/MRESOURCES-132 and https://issues.apache.org/jira/browse/MRESOURCES-236 
+                            <!-- XXX Check the progress of https://issues.apache.org/jira/browse/MRESOURCES-132 and https://issues.apache.org/jira/browse/MRESOURCES-236
                              What we really want is to copy permissions (specifically chmod +x) into the archive -->
                             <outputDirectory>${basedir}/target/classes/${packed.path}</outputDirectory>
                             <resources>
@@ -196,28 +196,28 @@
             </plugin>
 
             <!-- Set permissions for files (specifically chmod +x) // this is to compensate for the fact that resource copy routine above doesn't copy permissions, see the comment above -->
-            <plugin> 
-                <groupId>org.apache.maven.plugins</groupId> 
-                <artifactId>maven-antrun-plugin</artifactId> 
-                <version>1.8</version> 
-                <executions> 
-                    <execution> 
-                        <id>chmod-resources</id> 
-                        <phase>compile</phase> 
-                        <goals> 
-                            <goal>run</goal> 
-                        </goals> 
-                        <configuration> 
-                            <target> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>chmod-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
                                 <!-- JRE files -->
-                                <chmod dir="${basedir}/target/classes" includes="**/bin/*" perm="+x"/> 
-                                <chmod dir="${basedir}/target/classes" includes="**/lib/*.dylib*" perm="+x"/> <!-- macOS --> 
+                                <chmod dir="${basedir}/target/classes" includes="**/bin/*" perm="+x"/>
+                                <chmod dir="${basedir}/target/classes" includes="**/lib/*.dylib*" perm="+x"/> <!-- macOS -->
                                 <chmod dir="${basedir}/target/classes" includes="**/lib/jspawnhelper" perm="+x"/> <!-- macOS and Linux -->
-                            </target> 
-                        </configuration> 
-                    </execution> 
-                </executions> 
-            </plugin> 
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <!-- Generate list and MD5s for the data/ files -->
             <plugin>
@@ -255,7 +255,7 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-        
+
         <!-- Eclipse auto-generated code -->
         <pluginManagement>
             <plugins>
