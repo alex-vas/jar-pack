@@ -29,3 +29,7 @@ or try this to get individual file entries along with MD5s:
                 System.out.println(file.getName() +", MD5:"+ file.getMD5());
             });
         });
+
+# The JRE
+
+Consider getting you JRE from https://bintray.com/jetbrains/intellij-jdk

@@ -7,6 +7,8 @@ public interface JarPackEntry
 
     String getName();
 
+    JarPack getPack();
+
     String getMD5();
 
     String getSHA1();
